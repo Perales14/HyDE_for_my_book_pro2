@@ -88,6 +88,21 @@ nvidia_detect() {
     fi
 }
 
+intel_detect() {
+    readarray -t iGPU < <(lspci -k | grep -E "(VGA|3D)" | awk -F ': ' '{print $NF}')
+    if [ "${1}" == "--verbose" ]; then
+        for indx in "${!iGPU[@]}"; do
+            echo -e "\033[0;34m[gpu$indx]\033[0m detected :: ${iGPU[indx]}"
+        done
+        return 0
+    fi
+    if grep -iq intel <<<"${iGPU[@]}"; then
+        return 0
+    else
+        return 1
+    fi
+}
+
 prompt_timer() {
     set +e
     unset PROMPT_INPUT

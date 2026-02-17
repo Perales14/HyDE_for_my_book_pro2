@@ -21,16 +21,29 @@ if pkg_installed grub && [ -f /boot/grub/grub.cfg ]; then
         [ "${flg_DryRun}" -eq 1 ] || sudo cp /etc/default/grub /etc/default/grub.hyde.bkp
         [ "${flg_DryRun}" -eq 1 ] || sudo cp /boot/grub/grub.cfg /boot/grub/grub.hyde.bkp
 
+        # Configure boot parameters based on GPU detected
+        gcld=$(grep "^GRUB_CMDLINE_LINUX_DEFAULT=" "/etc/default/grub" | cut -d'"' -f2)
+        
         # Only if the nvidia installation doesn't skip
         if nvidia_detect; then
             if [ ${flg_Nvidia} -eq 1 ]; then
                 print_log -g "[bootloader] " -b "configure :: " "nvidia detected, adding nvidia_drm.modeset=1 to boot option..."
-                gcld=$(grep "^GRUB_CMDLINE_LINUX_DEFAULT=" "/etc/default/grub" | cut -d'"' -f2 | sed 's/\b nvidia_drm.modeset=.\b//g')
-                [ "${flg_DryRun}" -eq 1 ] || sudo sed -i "/^GRUB_CMDLINE_LINUX_DEFAULT=/c\GRUB_CMDLINE_LINUX_DEFAULT=\"${gcld} nvidia_drm.modeset=1\"" /etc/default/grub
+                gcld=$(echo "${gcld}" | sed 's/\b nvidia_drm.modeset=.\b//g')
+                gcld="${gcld} nvidia_drm.modeset=1"
             else
                 print_log -g "[bootloader] " -b "skip :: " "nvidia detected, skipping nvidia_drm.modeset=1 to boot option..."
             fi
         fi
+        
+        # Intel Graphics configuration for AMOLED/OLED backlight control
+        if intel_detect; then
+            print_log -g "[bootloader] " -b "configure :: " "Intel graphics detected, adding i915.enable_dpcd_backlight=3 for AMOLED backlight control..."
+            gcld=$(echo "${gcld}" | sed 's/\b i915.enable_dpcd_backlight=.\b//g')
+            gcld="${gcld} i915.enable_dpcd_backlight=3"
+        fi
+        
+        # Apply the final configuration
+        [ "${flg_DryRun}" -eq 1 ] || sudo sed -i "/^GRUB_CMDLINE_LINUX_DEFAULT=/c\GRUB_CMDLINE_LINUX_DEFAULT=\"${gcld}\"" /etc/default/grub
 
         print_log -g "[bootloader] " "Select grub theme:" -y "\n[1]" -y " Retroboot (dark)" -y "\n[2]" -y " Pochita (light)"
         read -r -p " :: Press enter to skip grub theme <or> Enter option number : " grubopt
@@ -62,16 +75,27 @@ if pkg_installed grub && [ -f /boot/grub/grub.cfg ]; then
 fi
 
 # systemd-boot
-if pkg_installed systemd && nvidia_detect && [ "$(bootctl status 2>/dev/null | awk '{if ($1 == "Product:") print $2}')" == "systemd-boot" ]; then
+if pkg_installed systemd && [ "$(bootctl status 2>/dev/null | awk '{if ($1 == "Product:") print $2}')" == "systemd-boot" ]; then
     print_log -sec "bootloader" -stat "detected" "systemd-boot"
 
     if [ "$(find /boot/loader/entries/ -type f -name '*.conf.hyde.bkp' 2>/dev/null | wc -l)" -ne "$(find /boot/loader/entries/ -type f -name '*.conf' 2>/dev/null | wc -l)" ]; then
-        print_log -g "[bootloader] " -b " :: " "nvidia detected, adding nvidia_drm.modeset=1 to boot option..."
-        if [[ "${flg_DryRun}" -ne 1 ]]; then
+        boot_params=""
+        
+        if nvidia_detect && [ ${flg_Nvidia} -eq 1 ]; then
+            print_log -g "[bootloader] " -b " :: " "nvidia detected, adding nvidia_drm.modeset=1 to boot option..."
+            boot_params="${boot_params} nvidia_drm.modeset=1"
+        fi
+        
+        if intel_detect; then
+            print_log -g "[bootloader] " -b " :: " "Intel graphics detected, adding i915.enable_dpcd_backlight=3 to boot option..."
+            boot_params="${boot_params} i915.enable_dpcd_backlight=3"
+        fi
+        
+        if [[ "${flg_DryRun}" -ne 1 ]] && [[ -n "${boot_params}" ]]; then
             find /boot/loader/entries/ -type f -name "*.conf" | while read -r imgconf; do
                 sudo cp "${imgconf}" "${imgconf}.hyde.bkp"
-                sdopt=$(grep -w "^options" "${imgconf}" | sed 's/\b quiet\b//g' | sed 's/\b splash\b//g' | sed 's/\b nvidia_drm.modeset=.\b//g')
-                sudo sed -i "/^options/c${sdopt} quiet splash nvidia_drm.modeset=1" "${imgconf}"
+                sdopt=$(grep -w "^options" "${imgconf}" | sed 's/\b quiet\b//g' | sed 's/\b splash\b//g' | sed 's/\b nvidia_drm.modeset=.\b//g' | sed 's/\b i915.enable_dpcd_backlight=.\b//g')
+                sudo sed -i "/^options/c${sdopt} quiet splash${boot_params}" "${imgconf}"
             done
         fi
     else

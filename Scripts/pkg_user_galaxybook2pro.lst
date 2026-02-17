@@ -1,0 +1,184 @@
+# --------------------------------------------------- // Galaxy Book 2 Pro - Paquetes Personalizados
+# Este archivo contiene paquetes específicos para Galaxy Book 2 Pro
+# Intel Core i7-1260P con Intel Xe Graphics
+#
+# Uso: ./install.sh pkg_user_galaxybook2pro.lst
+
+# --------------------------------------------------- // Intel Graphics - Drivers Esenciales
+mesa                                                   # OpenGL/Vulkan para Intel
+lib32-mesa                                             # Soporte 32-bit para juegos
+vulkan-intel                                           # Vulkan driver para Intel Xe
+lib32-vulkan-intel                                     # Vulkan 32-bit
+intel-media-driver                                     # VA-API para aceleración de video (GEN 8+)
+libva-intel-driver                                     # VA-API legacy (backup)
+libva-utils                                            # Utilidades para verificar VA-API
+vulkan-tools                                           # Herramientas de diagnóstico Vulkan
+intel-gpu-tools                                        # intel_gpu_top y otras herramientas
+
+# --------------------------------------------------- // Gestión de Energía - CRÍTICO para Laptop
+tlp                                                    # Optimización avanzada de batería
+tlp-rdw                                                # Radio Device Wizard para TLP
+powertop                                               # Monitoreo y optimización de consumo
+thermald                                               # Control inteligente de temperatura Intel
+acpi                                                   # ACPI utilities
+acpi_call                                              # ACPI call support
+acpid                                                  # ACPI daemon
+
+# --------------------------------------------------- // Audio - SOF para laptops modernos
+sof-firmware                                           # Sound Open Firmware para laptops Intel
+alsa-ucm-conf                                          # ALSA UCM configurations
+alsa-firmware                                          # Firmware adicional de audio
+
+# --------------------------------------------------- // WiFi Intel AX211
+linux-firmware                                         # Firmware completo (incluye Intel WiFi)
+
+# --------------------------------------------------- // Utilidades de Laptop
+brightnessctl                                          # Control de brillo (ya en pkg_core.lst pero crítico)
+light                                                  # Alternativa para control de brillo
+libinput                                               # Mejor soporte para touchpad
+xf86-input-libinput                                    # Driver libinput para X
+libinput-gestures                                      # Gestos de touchpad avanzados
+
+# --------------------------------------------------- // Monitoreo y Diagnóstico
+htop                                                   # Monitor de procesos mejorado
+btop                                                   # Monitor de sistema moderno
+lm_sensors                                             # Sensores de temperatura
+s-tui                                                  # Stress terminal UI
+stress                                                 # Stress testing
+
+# --------------------------------------------------- // Codec y Multimedia (AMOLED display)
+gst-libav                                              # Codecs para GStreamer
+gst-plugins-bad                                        # Plugins adicionales GStreamer
+gst-plugins-ugly                                       # Codecs propietarios GStreamer
+ffmpeg                                                 # Conversión de video/audio
+mpv                                                    # Reproductor de video ligero y potente
+
+# --------------------------------------------------- // Herramientas de Sistema
+neofetch                                               # Info del sistema con estilo
+fastfetch                                              # Alternativa más rápida (ya en core)
+eza                                                    # ls moderno
+bat                                                    # cat con syntax highlighting
+ripgrep                                                # grep ultra rápido
+fd                                                     # find mejorado
+dust                                                   # du mejorado
+duf                                                    # df mejorado
+ncdu                                                   # Analizador de disco ncurses
+
+# --------------------------------------------------- // Compresión y Archivos
+p7zip                                                  # 7z support
+unrar                                                  # RAR support
+zip                                                    # ZIP
+unzip                                                  # UNZIP
+
+# --------------------------------------------------- // Clipboard Management
+wl-clipboard                                           # Wayland clipboard utilities
+cliphist                                               # Ya en core pero crítico
+
+# --------------------------------------------------- // Desarrollo (opcional - comentar si no necesitas)
+# git                                                  # Control de versiones
+# base-devel                                           # Herramientas de desarrollo
+# python                                               # Python 3
+# python-pip                                           # Pip para Python
+# nodejs                                               # Node.js
+# npm                                                  # Node package manager
+
+# --------------------------------------------------- // Navegador
+firefox                                                # Navegador principal
+# chromium                                             # Alternativa
+
+# --------------------------------------------------- // Ofimática (descomentar si necesitas)
+# libreoffice-fresh                                    # Suite ofimática
+# hunspell-es                                          # Corrector español
+# hunspell-en_us                                       # Corrector inglés
+
+# --------------------------------------------------- // Gestión de Archivos
+thunar                                                 # File manager ligero
+thunar-archive-plugin                                  # Plugin de compresión
+thunar-media-tags-plugin                               # Tags multimedia
+thunar-volman                                          # Gestor de volúmenes
+gvfs                                                   # Virtual filesystem
+gvfs-mtp                                               # Soporte MTP (Android)
+gvfs-gphoto2                                           # Soporte cámaras
+tumbler                                                # Thumbnails
+
+# --------------------------------------------------- // Fuentes
+ttf-liberation                                         # Liberation fonts
+ttf-dejavu                                             # DejaVu fonts
+noto-fonts                                             # Google Noto
+noto-fonts-emoji                                       # Emojis
+noto-fonts-cjk                                         # Asian characters
+ttf-jetbrains-mono-nerd                                # JetBrains Mono con íconos
+ttf-firacode-nerd                                      # Fira Code con íconos
+
+# --------------------------------------------------- // Herramientas de Red
+networkmanager                                         # Ya en core
+networkmanager-openvpn                                 # VPN support
+openssh                                                # SSH client/server
+rsync                                                  # Sincronización de archivos
+
+# --------------------------------------------------- // Screenshot y Screen Recording
+grim                                                   # Ya en core - screenshot
+slurp                                                  # Ya en core - region selector
+swappy                                                 # Editor de screenshots
+wf-recorder                                            # Screen recorder para Wayland
+
+# --------------------------------------------------- // Utilidades de Sistema
+usbutils                                               # lsusb y utilities USB
+pciutils                                               # lspci
+dmidecode                                              # Hardware info
+hwinfo                                                 # Información detallada de hardware
+
+# --------------------------------------------------- // Temas y Apariencia
+nwg-look                                               # GTK theme switcher
+qt5ct                                                  # Qt5 configuration
+qt6ct                                                  # Qt6 configuration
+kvantum                                                # Qt theme engine
+papirus-icon-theme                                     # Iconos populares
+
+# --------------------------------------------------- // AUR Helper específicos (ya se instala en install.sh)
+# yay-bin                                              # AUR helper
+# paru-bin                                             # AUR helper alternativo
+
+# --------------------------------------------------- // Bluetooth
+bluez                                                  # Ya en core
+bluez-utils                                            # Ya en core
+blueman                                                # Ya en core
+
+# --------------------------------------------------- // Impresión (opcional)
+# cups                                                 # Sistema de impresión
+# cups-pdf                                             # Impresora PDF virtual
+# system-config-printer                                # Configuración de impresoras GUI
+
+# --------------------------------------------------- // Samsung Specific (Si necesitas)
+# Nota: No hay paquetes oficiales específicos para Galaxy Book en Arch
+# Pero estos pueden ser útiles:
+# samsung-unified-driver-printer                       # AUR - Drivers de impresora Samsung
+
+# --------------------------------------------------- // Juegos y Entretenimiento (opcional)
+# steam                                                # Plataforma de juegos
+# lutris                                               # Game launcher
+# gamemode                                             # Optimizaciones para juegos
+# mangohud                                             # Overlay para métricas en juegos
+
+# --------------------------------------------------- // Virtualización (opcional)
+# qemu-full                                            # Emulador
+# virt-manager                                         # GUI para VMs
+# libvirt                                              # Toolkit de virtualización
+# edk2-ovmf                                            # UEFI firmware para VMs
+# dnsmasq                                              # DNS/DHCP server
+# bridge-utils                                         # Network bridging
+
+# --------------------------------------------------- // Notas Finales
+# Este archivo está optimizado para Galaxy Book 2 Pro
+# - Intel Core i7-1260P (12th Gen)
+# - Intel Xe Graphics (96 EUs)
+# - Pantalla AMOLED
+# - 16GB LPDDR5
+# - WiFi Intel AX211
+#
+# Los paquetes marcados con # están comentados
+# Descomenta los que necesites antes de instalar
+#
+# Uso:
+# cd ~/HyDE/Scripts
+# ./install.sh pkg_user_galaxybook2pro.lst
